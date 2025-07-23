@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.List;
 
@@ -113,6 +114,7 @@ public class PerroControllerIntegrationTest {
         Long id = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Perro.class).getId();
 
         mockMvc.perform(get("/perro/" + id))
+                .andDo(print())// Imprime los valores en consola
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     assertEquals(objectMapper.readValue(result.getResponse().getContentAsString(), Perro.class).getId(),
