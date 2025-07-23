@@ -61,4 +61,10 @@ public class PersonaController {
     public void delete(@PathVariable Long id){
         personaService.delete(id);
     }
+
+    @PostMapping("/vive")
+    public Persona createConCasa(@RequestBody Persona persona){
+        Persona personaCreada = personaService.create(persona);
+        return personaCreada;
+    }
 }

@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.cic.curso25.cic25_proyConjunto02.model.Casa;
+import es.cic.curso25.cic25_proyConjunto02.model.Perro;
 import es.cic.curso25.cic25_proyConjunto02.model.Persona;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -229,4 +232,41 @@ public class PersonaControllerIntegrationTest {
         mockMvc.perform(delete("/persona/" + idCreado))
             .andExpect(status().isOk());
     }
+
+    @Test
+    void testCreateConCasa() throws Exception{
+        Persona persona = new Persona();
+        persona.setDni("12345678a");
+        persona.setNombre("Javier");
+        persona.setApellidos("Martínez Samperio");
+        persona.setEdad(30);
+
+
+        Casa casaTest = new Casa();
+        casaTest.setDireccion("C/ inventada, 21");
+        casaTest.setValorCatastral(123000L);
+
+        persona.setCasa(casaTest);
+        casaTest.setPersona(persona);
+        
+
+
+        //convertimos el objeto de tipo amistad en json con ObjectMapper
+        String personaACrear = objectMapper.writeValueAsString(persona);
+        
+        
+        //con MockMvc simulamos la peticion HTTP para crear una persona
+        mockMvc.perform(post("/persona/vive")
+        .contentType("application/json")
+        .content(personaACrear))
+        .andExpect(status().isOk())
+        .andExpect( personaResult ->{
+            assertNotNull(
+                objectMapper.readValue(
+                    personaResult.getResponse().getContentAsString(), Persona.class), 
+                "Ya tengo casa");
+            });
+
+    }
+    
 }

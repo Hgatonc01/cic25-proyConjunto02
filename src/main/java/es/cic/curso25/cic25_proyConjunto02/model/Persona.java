@@ -1,10 +1,12 @@
 package es.cic.curso25.cic25_proyConjunto02.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity(name = "PERSONA")
 public class Persona {
@@ -20,21 +22,20 @@ public class Persona {
     private String apellidos;
     @Column(name = "edad")
     private int edad;
-    @Column(name = "domicilio")
-    private String domicilio;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Casa casa;
 
     
 
     public Persona() {
     }
 
-    public Persona(Long id, String dni, String nombre, String apellidos, int edad, String domicilio) {
+    public Persona(Long id, String dni, String nombre, String apellidos, int edad) {
         this.id = id;
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.edad = edad;
-        this.domicilio = domicilio;
     }
 
     public Long getId() {
@@ -67,12 +68,15 @@ public class Persona {
     public void setEdad(int edad) {
         this.edad = edad;
     }
-    public String getDomicilio() {
-        return domicilio;
+
+    public Casa getCasa() {
+        return casa;
     }
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
+
+    public void setCasa(Casa casa) {
+        this.casa = casa;
     }
+    
 
     @Override
     public int hashCode() {
@@ -103,6 +107,8 @@ public class Persona {
     public String toString() {
         return "Persona [id=" + id + ", dni=" + dni + ", nombre=" + nombre + ", edad=" + edad + "]";
     }
+
+    
 
     
 }
