@@ -10,10 +10,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.cic.curso25.cic25_proyConjunto02.model.Persona;
+import es.cic.curso25.cic25_proyConjunto02.repository.PersonaRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,6 +35,9 @@ public class PersonaControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private PersonaRepository personaRepository;
     
     @Test
     void testCreate() throws Exception {
@@ -85,23 +89,18 @@ public class PersonaControllerIntegrationTest {
         persona.setNombre("Jose Javier");
         persona.setApellidos("Martínez Samperio");
         persona.setEdad(30);
-        //convertimos el objeto de tipo persona en json con ObjectMapper
-        String personaJson = objectMapper.writeValueAsString(persona);
-        //simulamos la llamada HTTP y recogemos el id generado
-        MvcResult mvcResult = mockMvc.perform(post("/persona")
-            .contentType("application/json")
-            .content(personaJson))
-            .andExpect(status().isOk())
-            .andReturn();
-        Long idGenerado = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Persona.class).getId();
+        //persistimos la persona con el método del repositorio y recogemos el id
+        Long idGenerado = personaRepository.save(persona).getId();
         //Le pasamos el objeto con los datos modificados y utilizando el id para el método de actualizar
         persona.setId(idGenerado);
         persona.setNombre("NoMeLLamoJoseJavier");
-        //volvemos a generar el String
-        personaJson = objectMapper.writeValueAsString(persona);
+        //generamos el string con objectMapper
+        String personaJson = objectMapper.writeValueAsString(persona);
+        //llamamos al metodo de update
         mockMvc.perform(put("/persona")
             .contentType("application/json")
             .content(personaJson))
+            .andDo(print())
             .andExpect(status().isOk());
         //comprobamos que el registro con el idGenerado tiene el mismo nombre que la modificacion que hemos hecho
         mockMvc.perform(get("/persona/" + idGenerado))
