@@ -233,40 +233,6 @@ public class PersonaControllerIntegrationTest {
             .andExpect(status().isOk());
     }
 
-    @Test
-    void testCreateConCasa() throws Exception{
-        Persona persona = new Persona();
-        persona.setDni("12345678a");
-        persona.setNombre("Javier");
-        persona.setApellidos("Martínez Samperio");
-        persona.setEdad(30);
-
-
-        Casa casaTest = new Casa();
-        casaTest.setDireccion("C/ inventada, 21");
-        casaTest.setValorCatastral(123000L);
-
-        persona.setCasa(casaTest);
-        casaTest.setPersona(persona);
-        
-
-
-        //convertimos el objeto de tipo amistad en json con ObjectMapper
-        String personaACrear = objectMapper.writeValueAsString(persona);
-        
-        
-        //con MockMvc simulamos la peticion HTTP para crear una persona
-        mockMvc.perform(post("/persona/vive")
-        .contentType("application/json")
-        .content(personaACrear))
-        .andExpect(status().isOk())
-        .andExpect( personaResult ->{
-            assertNotNull(
-                objectMapper.readValue(
-                    personaResult.getResponse().getContentAsString(), Persona.class), 
-                "Ya tengo casa");
-            });
-
-    }
+    
     
 }

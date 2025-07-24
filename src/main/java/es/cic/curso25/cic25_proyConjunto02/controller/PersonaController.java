@@ -67,4 +67,12 @@ public class PersonaController {
         Persona personaCreada = personaService.create(persona);
         return personaCreada;
     }
+
+    @PutMapping("/vive")
+    public Persona updateConCasa(@RequestBody Persona persona){
+        Persona personaCreada = personaService.update(persona);
+        return personaCreada;
+    }
+
+    
 }

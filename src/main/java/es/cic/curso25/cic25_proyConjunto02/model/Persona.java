@@ -22,7 +22,7 @@ public class Persona {
     private String apellidos;
     @Column(name = "edad")
     private int edad;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Casa casa;
 
     
