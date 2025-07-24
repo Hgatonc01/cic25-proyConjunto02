@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.cic.curso25.cic25_proyConjunto02.model.Casa;
 import es.cic.curso25.cic25_proyConjunto02.model.Persona;
+import es.cic.curso25.cic25_proyConjunto02.repository.CasaRepository;
 import es.cic.curso25.cic25_proyConjunto02.repository.PersonaRepository;
 
 @SpringBootTest
@@ -27,6 +28,9 @@ public class PersonaCasaIntegrationTest {
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    @Autowired
+    private CasaRepository casaRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -129,5 +133,7 @@ public class PersonaCasaIntegrationTest {
 
         //comprobamos si existe la persona
         assertTrue(personaRepository.findById(idCasa).isEmpty());
+        //comprobamos si existe la casa (ya que al haber puesto borrado en cascada suponemos que no puede existir por si sola)
+        assertTrue(casaRepository.findById(idCasa).isEmpty());
     }
 }
